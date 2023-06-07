@@ -22,19 +22,34 @@ fn print_all(data: Vec<Option<i32>>) {
         let res = print(item);
         match res {
             Ok(s) =>println!("---{}---", s),
-            Err(e) => println!("***{}***", e),
+            Err(k) => match k {
+                ErrKind::Caution => println!("***Caution***"),
+                ErrKind::Danger => {
+                    println!("Danger!!");
+                    panic!("Danger ERROR.");
+                },
+            }
         }
     }
 }
 
-fn print(item: Option<i32>) -> Result<String, String>{
+fn print(item: Option<i32>) -> Result<String, ErrKind>{
     match item {
         None => {
-            Err(String::from("ERROR IS OCCURED."))
+            Err(ErrKind::Danger)
         }
         Some(n) => {
             println!("No, {}", n);
-            Ok(String::from("OK"))
+            if n == 1 {
+                Err(ErrKind::Caution)
+            } else {
+                Ok("OK".to_string())
+            }
         }
     }
+}
+
+enum ErrKind {
+    Caution,
+    Danger,
 }
