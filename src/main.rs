@@ -19,13 +19,22 @@ fn random() -> Option<i32> {
 
 fn print_all(data: Vec<Option<i32>>) {
     for item in data {
-        print(item);
+        let res = print(item);
+        match res {
+            Ok(s) =>println!("---{}---", s),
+            Err(e) => println!("***{}***", e),
+        }
     }
 }
 
-fn print(item: Option<i32>) {
+fn print(item: Option<i32>) -> Result<String, String>{
     match item {
-        None => panic!("NODATA!!"),
-        Some(n) => println!("No, {}", n),
+        None => {
+            Err(String::from("ERROR IS OCCURED."))
+        }
+        Some(n) => {
+            println!("No, {}", n);
+            Ok(String::from("OK"))
+        }
     }
 }
