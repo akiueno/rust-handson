@@ -2,44 +2,35 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 fn main() {
-    let num = Arc::new(Mutex::new(1));
-    println!("Main: start!");
-    let num_1 = Arc::clone(&num);
+    let num1 = Arc::new(Mutex::new(0));
+    let num2 = Arc::new(Mutex::new(0));
+
+    let value1a = Arc::clone(&num1);
+    let value1b = Arc::clone(&num2);
+
+    let value2a = Arc::clone(&num1);
+    let value2b = Arc::clone(&num2);
 
     let h1 = thread::spawn(move || {
-        println!("H1: start!");
+        let mut num1 = value1a.lock().unwrap();
+        thread::sleep(Duration::from_millis(50));
+        let mut num2 = value1b.lock().unwrap();
 
-        for n in 1..6 {
-            {
-                let mut num_h1 = num_1.lock().unwrap();
-                *num_h1 += n;
-                println!("H1: num_h={}.", *num_h1);
-            }
-            thread::sleep(Duration::from_millis(1));
-        }
-
-        println!("H1: end!")
+        *num1 += 1;
+        *num2 += 1;
     });
-
-    let num_2 = Arc::clone(&num);
 
     let h2 = thread::spawn(move || {
-        println!("H2: start!");
+        let mut num2 = value2b.lock().unwrap();
+        thread::sleep(Duration::from_millis(50));
+        let mut num1 = value2a.lock().unwrap();
 
-        for n in 1..6 {
-            {
-                let mut num_h2 = num_2.lock().unwrap();
-                *num_h2 *= n;
-                println!("H2: No, {}.", num_h2);
-            }
-            thread::sleep(Duration::from_millis(1));
-        }
-
-        println!("H2: end!")
+        *num1 += 1;
+        *num2 += 1;
     });
 
-    let _res1 = h1.join();
-    let _res2 = h2.join();
+    h1.join().unwrap();
+    h2.join().unwrap();
 
     println!("Main: end!")
 }
