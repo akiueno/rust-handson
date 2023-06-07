@@ -25,7 +25,7 @@ fn print_all(data: Vec<Option<i32>>) {
 
 fn print(item: Option<i32>) {
     match item {
-        None => println!("no-data..."),
+        None => panic!("NODATA!!"),
         Some(n) => println!("No, {}", n),
     }
 }
