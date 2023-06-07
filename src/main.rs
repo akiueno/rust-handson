@@ -7,12 +7,14 @@ fn main() {
     let num_1 = Arc::clone(&num);
 
     let h1 = thread::spawn(move || {
-        let mut num_h1 = num_1.lock().unwrap();
         println!("H1: start!");
 
         for n in 1..6 {
-            *num_h1 += n;
-            println!("H1: num_h={}.", *num_h1);
+            {
+                let mut num_h1 = num_1.lock().unwrap();
+                *num_h1 += n;
+                println!("H1: num_h={}.", *num_h1);
+            }
             thread::sleep(Duration::from_millis(1));
         }
 
@@ -22,12 +24,14 @@ fn main() {
     let num_2 = Arc::clone(&num);
 
     let h2 = thread::spawn(move || {
-        let mut num_h2 = num_2.lock().unwrap();
         println!("H2: start!");
 
         for n in 1..6 {
-            *num_h2 *= n;
-            println!("H2: No, {}.", num_h2);
+            {
+                let mut num_h2 = num_2.lock().unwrap();
+                *num_h2 *= n;
+                println!("H2: No, {}.", num_h2);
+            }
             thread::sleep(Duration::from_millis(1));
         }
 
