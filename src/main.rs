@@ -9,21 +9,14 @@ fn main() {
     );
 }
 
-#[derive(PartialEq, Debug)]
-enum RadioValue {
-    First,
-    Second,
-    Third,
-}
-
 struct MyEguiApp {
-    pub value: RadioValue,
+    pub value: usize,
 }
 
 impl Default for MyEguiApp {
     fn default() -> Self {
         Self {
-            value: RadioValue::First,
+            value: 0,
         }
     }
 }
@@ -41,9 +34,9 @@ impl eframe::App for MyEguiApp {
 
             ui.spacing();
 
-            let msg = format!("Checked = {:?}.", self.value);
+            let msg = format!("value = {:?}.", self.value);
             let label_text = egui::RichText::new(msg)
-                .size(32.0)
+                .size(28.0)
                 .color(egui::Color32::from_rgba_premultiplied(255, 0, 0, 100))
                 .italics();
             let label = egui::Label::new(label_text);
@@ -51,15 +44,8 @@ impl eframe::App for MyEguiApp {
 
             ui.separator();
 
-            let label_1 = egui::RichText::new("First").size(24.0);
-            let label_2 = egui::RichText::new("Second").size(24.0);
-            let label_3 = egui::RichText::new("Third").size(24.0);
-
-            ui.horizontal(|ui| {
-                ui.radio_value(&mut self.value, RadioValue::First, label_1);
-                ui.radio_value(&mut self.value, RadioValue::Second, label_2);
-                ui.radio_value(&mut self.value, RadioValue::Third, label_3);
-            });
+            let sldr = egui::Slider::new(&mut self.value, 0..=100);
+            ui.add(sldr);
         });
     }
 }
