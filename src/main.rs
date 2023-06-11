@@ -15,9 +15,7 @@ struct MyEguiApp {
 
 impl Default for MyEguiApp {
     fn default() -> Self {
-        Self {
-            value: 0,
-        }
+        Self { value: 0 }
     }
 }
 
@@ -44,8 +42,8 @@ impl eframe::App for MyEguiApp {
 
             ui.separator();
 
-            let sldr = egui::Slider::new(&mut self.value, 0..=100);
-            ui.add(sldr);
+            let drg = egui::DragValue::new(&mut self.value).speed(1);
+            ui.add(drg);
         });
     }
 }
