@@ -9,20 +9,17 @@ fn main() {
     );
 }
 
-#[derive(PartialEq, Debug)]
-enum MyItem {
-    First,
-    Second,
-    Third,
-}
-
 struct MyEguiApp {
-    pub value: MyItem,
+    pub message: String,
+    pub content: String,
 }
 
 impl Default for MyEguiApp {
     fn default() -> Self {
-        Self { value: MyItem::First }
+        Self {
+            message: String::from("Hello"),
+            content: String::from("This is content."),
+        }
     }
 }
 
@@ -39,7 +36,7 @@ impl eframe::App for MyEguiApp {
 
             ui.spacing();
 
-            let msg = format!("Checked = {:?}.", self.value);
+            let msg = format!("Title:\"{}\"\nContent:[{}]", self.message, self.content);
             let label_text = egui::RichText::new(msg)
                 .size(28.0)
                 .color(egui::Color32::from_rgba_premultiplied(255, 0, 0, 100))
@@ -49,25 +46,13 @@ impl eframe::App for MyEguiApp {
 
             ui.separator();
 
-            ui.horizontal(|ui| {
-                let label_1 = egui::RichText::new("First").size(24.0);
-                if ui.add(egui::SelectableLabel::new(self.value == MyItem::First, label_1))
-                    .clicked() {
-                        self.value = MyItem::First;
-                }
+            let te_s1 = egui::TextEdit::singleline(&mut self.message)
+                .font(egui::FontId::proportional(20.0));
+            ui.add(te_s1);
 
-                let label_2 = egui::RichText::new("Second").size(24.0);
-                if ui.add(egui::SelectableLabel::new(self.value == MyItem::Second, label_2))
-                    .clicked() {
-                        self.value = MyItem::Second;
-                }
-
-                let label_3 = egui::RichText::new("Third").size(24.0);
-                if ui.add(egui::SelectableLabel::new(self.value == MyItem::Third, label_3))
-                    .clicked() {
-                        self.value = MyItem::Third;
-                }
-            })
+            let te_m1 =
+                egui::TextEdit::multiline(&mut self.content).font(egui::FontId::proportional(20.0));
+            ui.add(te_m1);
         });
     }
 }
