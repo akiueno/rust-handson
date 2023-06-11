@@ -36,7 +36,7 @@ impl eframe::App for MyEguiApp {
 
             ui.spacing();
 
-            let msg = format!("Title:\"{}\"\nContent:[{}]", self.message, self.content);
+            let msg = format!("input:\"{}\"", self.message);
             let label_text = egui::RichText::new(msg)
                 .size(28.0)
                 .color(egui::Color32::from_rgba_premultiplied(255, 0, 0, 100))
@@ -46,13 +46,18 @@ impl eframe::App for MyEguiApp {
 
             ui.separator();
 
-            let te_s1 = egui::TextEdit::singleline(&mut self.message)
+            let te_sl = egui::TextEdit::singleline(&mut self.message)
                 .font(egui::FontId::proportional(20.0));
-            ui.add(te_s1);
+            let resp = ui.add(te_sl);
+            if resp.changed() {
+                self.content = format!("{}\n{}",
+                self.message.to_uppercase(),
+                self.message.to_lowercase());
+            }
 
-            let te_m1 =
+            let te_ml =
                 egui::TextEdit::multiline(&mut self.content).font(egui::FontId::proportional(20.0));
-            ui.add(te_m1);
+            ui.add(te_ml);
         });
     }
 }
