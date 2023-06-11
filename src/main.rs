@@ -22,7 +22,9 @@ impl eframe::App for MyEguiApp {
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.heading("Hello World!");
             let label_text = egui::RichText::new("This is sample message.")
-                .font(egui::FontId::proportional(32.0));
+                .size(32.0)
+                .color(egui::Color32::from_rgba_premultiplied(255, 0, 0, 100))
+                .italics();
             let label = egui::Label::new(label_text);
             ui.add(label);
         });
