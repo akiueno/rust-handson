@@ -29,21 +29,10 @@ impl eframe::App for MyEguiApp {
 }
 
 fn plot(ui: &mut egui::Ui) {
-    ui.painter().rect_filled(
-        egui::Rect::from_min_max(
-            egui::Pos2::new(50.0, 50.0),
-            egui::Pos2::new(150.0, 150.0)
-        ),
-        egui::Rounding::same(20.0),
-        egui::Color32::RED,
-    );
+    let pos_1 = egui::Pos2::new(100.0, 100.0);
+    ui.painter().circle_filled(pos_1, 50.0, egui::Color32::RED);
 
-    ui.painter().rect_stroke(
-        egui::Rect::from_min_max(
-            egui::Pos2::new(100.0, 100.0),
-            egui::Pos2::new(200.0, 200.0),
-        ),
-        egui::Rounding::none(),
-        egui::Stroke::new(10.0, egui::Color32::GREEN),
-    );
+    let pos_2 = egui::Pos2::new(150.0, 150.0);
+    let stroke_2 = egui::Stroke::new(10.0, egui::Color32::GREEN);
+    ui.painter().circle_stroke(pos_2, 50.0, stroke_2);
 }
