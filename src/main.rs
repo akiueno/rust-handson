@@ -1,44 +1,30 @@
-use std::sync::mpsc;
-use std::thread;
-use std::time::Duration;
 fn main() {
-    let (tx1, rx1) = mpsc::sync_channel(1);
-    let (tx2, rx2) = mpsc::sync_channel(1);
-    tx2.try_send(0).unwrap();
-    println!("Main: start!");
+    let mut native_options = eframe::NativeOptions::default();
+    native_options.default_theme = eframe::Theme::Light;
+    let _ = eframe::run_native(
+        "My egui App",
+        native_options,
+        Box::new(|cc| Box::new(MyEguiApp::new(cc))),
+    );
+}
 
-    let h1 = thread::spawn(move || {
-        println!("H1: Start!");
+#[derive(Default)]
+struct MyEguiApp {}
 
-        for _n in 1..5 {
-            let val = rx2.recv().unwrap();
-            let num = val + 1;
-            println!("H1: num= {}", num);
-            tx1.try_send(num).unwrap();
-            thread::sleep(Duration::from_millis(10));
-        }
+impl MyEguiApp {
+    fn new(_cc: &eframe::CreationContext) -> Self {
+        Self::default()
+    }
+}
 
-        println!("H1: End!");
-    });
-
-    thread::sleep(Duration::from_millis(5));
-
-    let h2 = thread::spawn(move || {
-        println!("H2: Start!");
-
-        for _n in 1..5 {
-            let val = rx1.recv().unwrap();
-            let num = val * 2;
-            println!("H2: num= {}", num);
-            tx2.try_send(num).unwrap();
-            thread::sleep(Duration::from_millis(100));
-        }
-
-        println!("H2: End!");
-    });
-
-    let _ = h1.join();
-    let _ = h2.join();
-
-    println!("Main: end!")
+impl eframe::App for MyEguiApp {
+    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        egui::CentralPanel::default().show(ctx, |ui| {
+            ui.heading("Hello World!");
+            let label_text = egui::RichText::new("This is sample message.")
+                .font(egui::FontId::proportional(32.0));
+            let label = egui::Label::new(label_text);
+            ui.add(label);
+        });
+    }
 }
