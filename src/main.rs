@@ -9,13 +9,20 @@ fn main() {
     );
 }
 
+#[derive(PartialEq, Debug)]
+enum MyItem {
+    First,
+    Second,
+    Third,
+}
+
 struct MyEguiApp {
-    pub value: usize,
+    pub value: MyItem,
 }
 
 impl Default for MyEguiApp {
     fn default() -> Self {
-        Self { value: 0 }
+        Self { value: MyItem::First }
     }
 }
 
@@ -32,7 +39,7 @@ impl eframe::App for MyEguiApp {
 
             ui.spacing();
 
-            let msg = format!("value = {:?}.", self.value);
+            let msg = format!("Checked = {:?}.", self.value);
             let label_text = egui::RichText::new(msg)
                 .size(28.0)
                 .color(egui::Color32::from_rgba_premultiplied(255, 0, 0, 100))
@@ -42,8 +49,25 @@ impl eframe::App for MyEguiApp {
 
             ui.separator();
 
-            let drg = egui::DragValue::new(&mut self.value).speed(1);
-            ui.add(drg);
+            ui.horizontal(|ui| {
+                let label_1 = egui::RichText::new("First").size(24.0);
+                if ui.add(egui::SelectableLabel::new(self.value == MyItem::First, label_1))
+                    .clicked() {
+                        self.value = MyItem::First;
+                }
+
+                let label_2 = egui::RichText::new("Second").size(24.0);
+                if ui.add(egui::SelectableLabel::new(self.value == MyItem::Second, label_2))
+                    .clicked() {
+                        self.value = MyItem::Second;
+                }
+
+                let label_3 = egui::RichText::new("Third").size(24.0);
+                if ui.add(egui::SelectableLabel::new(self.value == MyItem::Third, label_3))
+                    .clicked() {
+                        self.value = MyItem::Third;
+                }
+            })
         });
     }
 }
