@@ -1,3 +1,5 @@
+use std::vec;
+
 fn main() {
     let mut native_options = eframe::NativeOptions::default();
     native_options.default_theme = eframe::Theme::Light;
@@ -28,18 +30,15 @@ impl eframe::App for MyEguiApp {
 }
 
 fn plot(ui: &mut egui::Ui) {
-    ui.painter().text(
-        egui::Pos2 { x: 50.0, y: 50.0 },
-        egui::Align2::LEFT_CENTER,
-        "Hello!",
-        egui::FontId::proportional(24.0),
-        egui::Color32::RED,
-    );
-    ui.painter().text(
-        egui::Pos2 { x: 50.0, y: 100.0 },
-        egui::Align2::LEFT_CENTER,
-        "Sample Message.",
-        egui::FontId::proportional(36.0),
-        egui::Color32::BLUE,
-    );
+    let data = vec![
+        egui::Pos2::new(50.0, 100.0),
+        egui::Pos2::new(250.0, 100.0),
+        egui::Pos2::new(75.0, 225.0),
+        egui::Pos2::new(150.0, 50.0),
+        egui::Pos2::new(225.0, 225.0),
+    ];
+    let stroke_1 = egui::Stroke::new(5.0, egui::Color32::from_rgb(255, 0, 0));
+    let mut shape_1 = eframe::epaint::PathShape::line(data, stroke_1);
+    shape_1.closed = true;
+    ui.painter().add(shape_1);
 }
