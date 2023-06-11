@@ -11,8 +11,17 @@ fn main() {
     );
 }
 
-#[derive(Default)]
-struct MyEguiApp {}
+struct MyEguiApp {
+    click_pos: Vec<egui::Pos2>,
+}
+
+impl Default for MyEguiApp {
+    fn default() -> Self {
+        Self {
+            click_pos: vec![],
+        }
+    }
+}
 
 impl MyEguiApp {
     fn new(_cc: &eframe::CreationContext) -> Self {
@@ -24,21 +33,20 @@ impl eframe::App for MyEguiApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.heading("Hello World!");
-            plot(ui);
+            let resp = ui.allocate_response(egui::vec2(400.0, 300.0), egui::Sense::click());
+            if resp.clicked() {
+                let p = resp.interact_pointer_pos().unwrap();
+                self.click_pos.push(p);
+            }
+
+            plot(ui, &self.click_pos)
         });
     }
 }
 
-fn plot(ui: &mut egui::Ui) {
-    let data = vec![
-        egui::Pos2::new(50.0, 100.0),
-        egui::Pos2::new(250.0, 100.0),
-        egui::Pos2::new(75.0, 225.0),
-        egui::Pos2::new(150.0, 50.0),
-        egui::Pos2::new(225.0, 225.0),
-    ];
-    let stroke_1 = egui::Stroke::new(5.0, egui::Color32::from_rgb(255, 0, 0));
-    let mut shape_1 = eframe::epaint::PathShape::line(data, stroke_1);
-    shape_1.closed = true;
-    ui.painter().add(shape_1);
+fn plot(ui: &mut egui::Ui, pos: &Vec<egui::Pos2>) {
+    for p in pos {
+        ui.painter().circle_filled(*p, 25.0,
+        egui::Color32::from_rgba_premultiplied(255, 0, 0, 100))
+    }
 }
